@@ -28,3 +28,17 @@ public class OrderDTO
     // The tip is intentionally not included here — Joe wants to see it separately.
     public decimal Total => PizzaTotal + (IsDelivery ? DeliverySurcharge : 0m);
 }
+
+public class CreateOrderDTO
+{
+    public int? TableNumber { get; set; }
+    public int EmployeeId { get; set; }
+}
+
+public class UpdateOrderDTO
+{
+    public int? TableNumber { get; set; }
+    public decimal? Tip { get; set; }
+    public int? DelivererId { get; set; }
+}
+
