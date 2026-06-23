@@ -1,0 +1,1 @@
+export const getSauces = () => fetch("/api/sauces").then((res) => res.json());

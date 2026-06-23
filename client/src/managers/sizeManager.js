@@ -1,0 +1,1 @@
+export const getSizes = () => fetch("/api/sizes").then((res) => res.json());

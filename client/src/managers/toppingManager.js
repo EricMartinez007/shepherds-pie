@@ -1,0 +1,1 @@
+export const getToppings = () => fetch("/api/toppings").then((res) => res.json());

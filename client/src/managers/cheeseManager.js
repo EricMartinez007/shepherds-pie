@@ -1,0 +1,1 @@
+export const getCheeses = () => fetch("/api/cheeses").then((res) => res.json());
