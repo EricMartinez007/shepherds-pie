@@ -22,6 +22,21 @@ public class PizzasController : ControllerBase
         _dbContext = context;
         _mapper = mapper;
     }
+    
+    [HttpGet("{id}")]
+    [Authorize]
+    public IActionResult GetPizza(int id)
+    {
+        Pizza? pizza = _dbContext.Pizzas
+            .Include(p => p.Size)
+            .Include(p => p.Cheese)
+            .Include(p => p.Sauce)
+            .Include(p => p.PizzaToppings).ThenInclude(pt => pt.Topping)
+            .SingleOrDefault(p => p.Id == id);
+
+        return pizza is null ? NotFound() : Ok(_mapper.Map<PizzaDTO>(pizza));
+    }
+
     [HttpPost]
     [Authorize]
     public IActionResult CreatePizza(CreatePizzaDTO newPizzaDTO)

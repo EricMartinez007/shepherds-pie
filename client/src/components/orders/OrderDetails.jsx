@@ -1,15 +1,20 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { Button, Card, CardBody, CardHeader, ListGroup, ListGroupItem, Table } from "reactstrap";
-import { getOrder } from "../../managers/orderManager";
+import { getOrder, deleteOrder } from "../../managers/orderManager";
+import { deletePizza } from "../../managers/pizzaManager";
+
 
 export default function OrderDetail({ loggedInUser }) {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [order, setOrder] = useState(null);
 
   useEffect(() => {
     getOrder(id).then(setOrder);
   }, [id]);
+
+  const refreshOrder = () => getOrder(id).then(setOrder);
 
   if (!order) return <p>Loading...</p>;
 
@@ -19,9 +24,15 @@ export default function OrderDetail({ loggedInUser }) {
         {order.id}
       </h2>
         {loggedInUser?.roles?.includes("Admin") && (
-            <Link to={`/orders/${order.id}/pizzas/create`}>
+            <>
+                <Link to={`/orders/${order.id}/pizzas/create`}>
                 <Button color="primary" className="mb-3">Add Pizza</Button>
-            </Link>
+                </Link>
+                {" "}
+                <Link to={`/orders/${order.id}/edit`}>
+                <Button color="secondary" className="mb-3">Edit Order</Button>
+                </Link>
+            </>
         )}
       <Card className="mb-4">
         <CardHeader>Order Details</CardHeader>
@@ -74,7 +85,17 @@ export default function OrderDetail({ loggedInUser }) {
                     <td>${p.total.toFixed(2)}</td>
                     <td>
                     {loggedInUser?.roles?.includes("Admin") && (
-                        <Link to={`/orders/${order.id}/pizzas/create`}>Edit</Link>
+                        <>
+                        <Link to={`/orders/${order.id}/pizzas/${p.id}/edit`}>Edit</Link>
+                        {" | "}
+                        <Button
+                            color="danger"
+                            size="sm"
+                            onClick={() => deletePizza(p.id).then(refreshOrder)}
+                        >
+                            Remove
+                        </Button>
+                        </>
                     )}
                     </td>
                 </tr>
@@ -86,6 +107,15 @@ export default function OrderDetail({ loggedInUser }) {
         )}
         </CardBody>
       </Card>
+        {loggedInUser?.roles?.includes("Admin") && (
+        <Button
+            color="danger"
+            onClick={() => deleteOrder(order.id).then(() => navigate("/orders"))}
+        >
+            Cancel Order
+        </Button>
+        )}
+
     </div>
   );
 }
