@@ -21,7 +21,7 @@ export default function OrderDetail({ loggedInUser }) {
   return (
     <div className="container mt-4">
       <h2>
-        {order.id}
+        Order #{order.id}
       </h2>
         {loggedInUser?.roles?.includes("Admin") && (
             <>
@@ -107,6 +107,7 @@ export default function OrderDetail({ loggedInUser }) {
         )}
         </CardBody>
       </Card>
+        
         {loggedInUser?.roles?.includes("Admin") && (
         <Button
             color="danger"
@@ -115,7 +116,9 @@ export default function OrderDetail({ loggedInUser }) {
             Cancel Order
         </Button>
         )}
-
+    <Button color="secondary" onClick={() => navigate("/orders")}>
+    Back to Orders
+    </Button>
     </div>
   );
 }
