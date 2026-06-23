@@ -19,7 +19,7 @@ export default function OrderDetail({ loggedInUser }) {
         {order.id}
       </h2>
         {loggedInUser?.roles?.includes("Admin") && (
-            <Link to="/pizzas/create">
+            <Link to={`/orders/${order.id}/pizzas/create`}>
                 <Button color="primary" className="mb-3">Add Pizza</Button>
             </Link>
         )}
